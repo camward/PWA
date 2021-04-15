@@ -8,7 +8,12 @@ self.addEventListener("install", async (event) => {
 });
 
 self.addEventListener("activate", async (event) => {
-  console.log("SW - activate");
+  const cacheNames = await caches.keys();
+  await Promise.all(
+    cacheNames
+      .filter((name) => name !== staticCacheName)
+      .map((name) => caches.delete(name))
+  );
 });
 
 self.addEventListener("fetch", (event) => {
