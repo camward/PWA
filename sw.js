@@ -10,3 +10,13 @@ self.addEventListener("install", async (event) => {
 self.addEventListener("activate", async (event) => {
   console.log("SW - activate");
 });
+
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  event.respondWith(cacheFirst(request));
+});
+
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
+  return cached ?? (await fetch(request));
+}
